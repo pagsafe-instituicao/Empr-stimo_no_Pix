@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Quantum Credit - Sistema de Aporte Digital</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #020617;
+            --bg-card: #0f172a;
+            --accent-green: #10b981;
+            --accent-glow: rgba(16, 185, 129, 0.4);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --gradient: linear-gradient(135deg, #1e293b 0%, #020617 100%);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+
+        body { 
+            background: var(--bg-main); 
+            color: var(--text-main);
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; overflow: hidden;
+        }
+
+        /* Container Mobile 9:16 Ultra Professional */
+        .app-shell {
+            background: var(--bg-card);
+            width: 100%; max-width: 500px;
+            height: 100vh; max-height: 1000px;
+            position: relative; overflow: hidden;
+            border-radius: 45px;
+            box-shadow: 0 0 80px rgba(0,0,0,0.8);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .slider-engine {
+            display: flex; width: 100%; height: 100%;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .step {
+            min-width: 100%; height: 100%;
+            padding: 50px 30px;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            text-align: center;
+        }
+
+        /* Elementos de UI */
+        .hero-img {
+            width: 100%; height: -200px;
+            object-fit: cover; border-radius: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        h2 { font-size: 1.7rem; margin-bottom: 12px; font-weight: 800; letter-spacing: -0.5px; }
+        p { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 35px; line-height: 1.6; }
+
+        .btn-option {
+            width: 100%; padding: 18px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 22px; color: #fff;
+            font-size: 1rem; font-weight: 600;
+            margin-bottom: 12px; cursor: pointer;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-option:active { background: var(--accent-green); color: #000; transform: scale(0.98); }
+
+        .btn-next {
+            width: 100%; padding: 22px;
+            background: var(--accent-green);
+            color: #000; border: none; border-radius: 22px;
+            font-size: 1.1rem; font-weight: 800;
+            text-transform: uppercase; cursor: pointer;
+            box-shadow: 0 10px 25px var(--accent-glow);
+            text-decoration: none; display: inline-block;
+            margin-top: 10px;
+        }
+
+        input {
+            width: 100%; padding: 20px; border-radius: 22px;
+            border: 2px solid rgba(255,255,255,0.1);
+            background: #000; color: #fff; margin-bottom: 20px;
+            text-align: center; font-size: 1.2rem; font-weight: bold;
+        }
+        input:focus { border-color: var(--accent-green); outline: none; }
+
+        /* Loader Overlay */
+        .loader-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-card); z-index: 1000;
+            display: none; flex-direction: column;
+            justify-content: center; align-items: center;
+        }
+
+        .spinner-ring {
+            width: 70px; height: 70px;
+            border: 6px solid rgba(255,255,255,0.1);
+            border-top: 6px solid var(--accent-green);
+            border-radius: 50%;
+            animation: spin 0.8s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            margin-bottom: 25px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Feedback Section */
+        .review-scroll { width: 100%; max-height: 300px; overflow-y: auto; padding-right: 5px; }
+        .review-card {
+            background: rgba(255,255,255,0.03);
+            padding: 20px; border-radius: 25px;
+            margin-bottom: 15px; text-align: left;
+            border-left: 4px solid var(--accent-green);
+        }
+        .stars { color: #fbbf24; margin-bottom: 8px; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+<div class="app-shell">
+    <div id="loader" class="loader-overlay">
+        <div class="spinner-ring"></div>
+        <h3 id="loader-text">Processando...</h3>
+    </div>
+
+    <div class="slider-engine" id="engine">
+        
+        <div class="step">
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500" class="hero-img">
+            <h2>Sistema Quantum Credit</h2>
+            <p>Análise de crédito criptografada com liberação imediata via Pix. Prepare seus documentos.</p>
+            <button class="btn-next" onclick="fireStep(1, 'Iniciando Servidores...')">Verificar Meu Limite</button>
+        </div>
+
+        <div class="step">
+            <h2>Identificação</h2>
+            <p>Como devemos te chamar formalmente?</p>
+            <input type="text" placeholder="Nome Completo">
+            <button class="btn-next" onclick="fireStep(2, 'Validando Identidade...')">Próximo</button>
+        </div>
+
+        <div class="step">
+            <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=500" class="hero-img">
+            <h2>Consulta de CPF</h2>
+            <p>Informe seu CPF para consulta automática na rede de crédito.</p>
+            <input type="number" placeholder="000.000.000-00">
+            <button class="btn-next" onclick="fireStep(3, 'Consultando Receita...')">Verificar CPF</button>
+        </div>
+
+        <div class="step">
+            <h2>Qual valor você precisa?</h2>
+            <p>Simule um valor entre R$ 500,00 e R$ 50.000,00.</p>
+            <input type="number" placeholder="R$ 0,00">
+            <button class="btn-next" onclick="fireStep(4, 'Simulando Parcelas...')">Simular Valor</button>
+        </div>
+
+        <div class="step">
+            <h2>Finalidade do Uso</h2>
+            <p>Por que você deseja este empréstimo hoje?</p>
+            <button class="btn-option" onclick="fireStep(5, 'Ajustando Condições...')">Pagar Dívidas Urgentes</button>
+            <button class="btn-option" onclick="fireStep(5, 'Ajustando Condições...')">Investimento / Negócio</button>
+            <button class="btn-option" onclick="fireStep(5, 'Ajustando Condições...')">Viagens ou Lazer</button>
+            <button class="btn-option" onclick="fireStep(5, 'Ajustando Condições...')">Reformas Domésticas</button>
+        </div>
+
+        <div class="step">
+            <h2>Ocupação Profissional</h2>
+            <p>Qual sua fonte de renda atual?</p>
+            <button class="btn-option" onclick="fireStep(6, 'Cruzando Dados de Renda...')">CLT (Carteira Assinada)</button>
+            <button class="btn-option" onclick="fireStep(6, 'Cruzando Dados de Renda...')">Autônomo / Freelancer</button>
+            <button class="btn-option" onclick="fireStep(6, 'Cruzando Dados de Renda...')">Aposentado / Pensionista</button>
+            <button class="btn-option" onclick="fireStep(6, 'Cruzando Dados de Renda...')">Servidor Público</button>
+        </div>
+
+        <div class="step">
+            <h2>Renda Mensal Estimada</h2>
+            <p>Informe sua média salarial mensal.</p>
+            <button class="btn-option" onclick="fireStep(7, 'Analisando Score...')">Até R$ 2.000</button>
+            <button class="btn-option" onclick="fireStep(7, 'Analisando Score...')">R$ 2.000 a R$ 5.000</button>
+            <button class="btn-option" onclick="fireStep(7, 'Analisando Score...')">R$ 5.000 a R$ 10.000</button>
+            <button class="btn-option" onclick="fireStep(7, 'Analisando Score...')">Acima de R$ 10.000</button>
+        </div>
+
+        <div class="step">
+            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=500" class="hero-img">
+            <h2>Plano de Parcelamento</h2>
+            <p>Em quantas vezes deseja dividir?</p>
+            <button class="btn-option" onclick="fireStep(8, 'Calculando Juros...')">12 Vezes (Taxa Zero)</button>
+            <button class="btn-option" onclick="fireStep(8, 'Calculando Juros...')">24 Vezes</button>
+            <button class="btn-option" onclick="fireStep(8, 'Calculando Juros...')">48 Vezes</button>
+            <button class="btn-option" onclick="fireStep(8, 'Calculando Juros...')">72 Vezes</button>
+        </div>
+
+        <div class="step">
+            <h2>Recebimento via PIX</h2>
+            <p>Informe a chave onde o valor será creditado em 10 minutos.</p>
+            <input type="text" placeholder="Chave PIX (CPF/Email/Tel)">
+            <button class="btn-next" onclick="fireStep(9, 'Vinculando Chave...')">Confirmar Recebimento</button>
+        </div>
+
+        <div class="step">
+            <h2>Método de Pagamento</h2>
+            <p>Como você prefere pagar suas mensalidades?</p>
+            <button class="btn-option" onclick="fireStep(10, 'Configurando Boletos...')">Boleto Bancário</button>
+            <button class="btn-option" onclick="fireStep(10, 'Configurando Boletos...')">Débito Automático</button>
+            <button class="btn-option" onclick="fireStep(10, 'Configurando Boletos...')">Carnê Digital</button>
+        </div>
+
+        <div class="step">
+            <h2>Comprovação de Residência</h2>
+            <p>Informe o seu CEP para finalização contratual.</p>
+            <input type="number" placeholder="00000-000">
+            <button class="btn-next" onclick="fireStep(11, 'Mapeando Localidade...')">Validar Endereço</button>
+        </div>
+
+        <div class="step">
+            <h2>Nossa Credibilidade</h2>
+            <p>Veja quem já recebeu nosso aporte hoje:</p>
+            <div class="review-scroll">
+                <div class="review-card">
+                    <div class="stars">★★★★★</div>
+                    <p style="font-size: 0.8rem; line-height: 1.4;">"Incrível! O Pix de R$ 8.000 caiu logo após eu ativar o plano de garantia. Super recomendo!"</p>
+                    <small style="color: var(--accent-green); font-weight: bold;">- Roberto Alves, São Paulo</small>
+                </div>
+                <div class="review-card">
+                    <div class="stars">★★★★★</div>
+                    <p style="font-size: 0.8rem; line-height: 1.4;">"Estava com nome sujo e consegui a aprovação. Atendimento nota 10."</p>
+                    <small style="color: var(--accent-green); font-weight: bold;">- Amanda Costa, Curitiba</small>
+                </div>
+                <div class="review-card">
+                    <div class="stars">★★★★★</div>
+                    <p style="font-size: 0.8rem; line-height: 1.4;">"Processo rápido. O depósito via Itaú foi instantâneo. Site muito confiável."</p>
+                    <small style="color: var(--accent-green); font-weight: bold;">- Fernando Melo, RJ</small>
+                </div>
+            </div>
+            <button class="btn-next" onclick="startFinalAnalysis()">Solicitar Aprovação Final</button>
+        </div>
+
+        <div class="step" id="final-loading-screen">
+            <div class="spinner-ring" style="width: 100px; height: 100px; border-width: 10px;"></div>
+            <h2>Análise de Risco Final</h2>
+            <p>Nosso algoritmo está verificando as últimas travas de segurança e preparando o lote de transferência via PIX.</p>
+        </div>
+
+        <div class="step">
+            <img src="https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=500" class="hero-img">
+            <h2 style="color: var(--accent-green);">LIMITE APROVADO! 🎉</h2>
+            <p>Parabéns! O valor total do <b>Empréstimo</b> foi pré-aprovado para sua conta. <br><br> Para que o sistema realize o envio imediato agora mesmo, você só precisa <b>ativar o seu Plano de Garantia Digital</b>.</p>
+            
+            <a href="https://pay.sunize.com.br/pix/2L6391U4S967" class="btn-next" style="background: #16a34a; color: #fff; text-align: center;">
+                Pagar plano de garantia e receber o valor
+            </a>
+            <p style="font-size: 0.75rem; margin-top: 20px; font-weight: bold;">Falta apenas este passo para o dinheiro cair no seu PIX.</p>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    let currentStep = 0;
+    const engine = document.getElementById('engine');
+    const loader = document.getElementById('loader');
+    const loaderText = document.getElementById('loader-text');
+
+    // Função para passar passos com loading de 3.5s
+    function fireStep(targetIndex, msg) {
+        loaderText.innerText = msg;
+        loader.style.display = 'flex';
+
+        setTimeout(() => {
+            loader.style.display = 'none';
+            moveTo(targetIndex);
+        }, 3500);
+    }
+
+    // Função de Análise Final de 10 segundos
+    function startFinalAnalysis() {
+        moveTo(12); // Move para a tela de loading visual (index 12)
+        
+        setTimeout(() => {
+            moveTo(13); // Após 10 segundos, move para a tela de Aprovado (index 13)
+        }, 10000);
+    }
+
+    function moveTo(index) {
+        currentStep = index;
+        engine.style.transform = `translateX(-${currentStep * 100}%)`;
+    }
+</script>
+
+</body>
+</html>
